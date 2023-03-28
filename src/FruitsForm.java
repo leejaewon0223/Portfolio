@@ -1,5 +1,4 @@
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,21 +33,19 @@ public class FruitsForm extends JFrame implements ActionListener {
 
 	public FruitsForm() throws IOException {
 
-		fruits = new ArrayList<>();
+		Cart<Fruit> cart = new Cart<>();
+		Fruit[] fruitArray = new Fruit[9];
 
 		displayTable();
-
-		Fruit[] fruitArray = new Fruit[9];
 		addFruitArray(fruitArray);
+		fruitImage(fruitArray);
 
-		Cart<Fruit> cart = new Cart<>();
-
-		addBtn.addActionListener(e -> {
+		addBtn.addActionListener(e -> { // 카트(목록)에 과일을 담는 메소드
 			String name = nameField.getText();
 			for (Fruit fruit : fruitArray) {
 				if (name.equals(fruit.getName())) {
 
-					cart.addItem(new Fruit(name, fruit.getPrice())); // 카드에 과일 담기
+					cart.addItem(new Fruit(name, fruit.getPrice()));
 
 					Object[] row = { name, fruit.getPrice() };
 					tableModel.addRow(row);
@@ -59,15 +56,18 @@ public class FruitsForm extends JFrame implements ActionListener {
 			}
 		});
 
-		buyBtn.addActionListener(e -> {
+		buyBtn.addActionListener(e -> { // 계산할 가격을 알려주는 메소드
+			int priceSum = 0;
 			System.out.println(cart.getItems());
+			for (int i = 0; i < cart.getItems().size(); i++) {
+				priceSum += cart.getItems().get(i).getPrice();
+			}
+			System.out.println("계산하실 가격은 " + priceSum + "원 입니다.");
 		});
-
-		fruitImage(fruitArray);
 
 	}
 
-	private void displayTable() {
+	private void displayTable() { // 테이블을 보여주는 메소드
 		String[] columnNames = { "이름", "가격" };
 		Object[][] data = new Object[0][2];
 		tableModel = new DefaultTableModel(data, columnNames);
@@ -81,7 +81,7 @@ public class FruitsForm extends JFrame implements ActionListener {
 
 	}
 
-	private void fruitImage(Fruit[] fruitArray) throws IOException {
+	private void fruitImage(Fruit[] fruitArray) throws IOException { // 과일이미지 swing 메소드
 		JPanel frutiPanel = new JPanel();
 		frutiPanel.setLayout(new GridLayout(3, 3));
 		frutiPanel.setPreferredSize(new Dimension(440, 300));
@@ -99,7 +99,7 @@ public class FruitsForm extends JFrame implements ActionListener {
 		mainpanelSwing(frutiPanel);
 	}
 
-	private void mainpanelSwing(JPanel frutiPanel) {
+	private void mainpanelSwing(JPanel frutiPanel) { // 메인 swing 메소드
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.add(new JScrollPane(table), BorderLayout.EAST);
@@ -118,7 +118,7 @@ public class FruitsForm extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
-	private void addFruitArray(Fruit[] fruitArray) {
+	private void addFruitArray(Fruit[] fruitArray) { // 과일을 배열에 저장하는 메소드
 		fruitArray[0] = new Fruit("사과", 1500);
 		fruitArray[1] = new Fruit("오렌지", 2500);
 		fruitArray[2] = new Fruit("멜론", 4500);
@@ -130,7 +130,7 @@ public class FruitsForm extends JFrame implements ActionListener {
 		fruitArray[8] = new Fruit("복숭아", 2500);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException { // 메인 메소드
 		new FruitsForm();
 	}
 
